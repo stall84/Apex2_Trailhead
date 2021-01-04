@@ -1,3 +1,56 @@
 
 /******  AREA FOR CREATING/EXECUTING ANONYMOUS APEX  ******/
 
+// Basic REST GET Request to Apex conversion callout
+Http http = new Http();
+HttpRequest request = new HttpRequest();
+
+request.setEndpoint('https://th-apex-http-callout.herokuapp.com/animals');
+request.setMethod('GET');
+
+HttpResponse response = http.send(request);
+
+if (response.getStatusCode() == 200) {
+    Map<String, Object> results = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
+    System.debug(results);
+    List<Object> animals = (List<Object>) results.get('animals');
+    System.debug(animals);
+}
+
+// Basic REST POST Request to Apex conversion callout
+
+Http http = new Http();
+HttpRequest request = new HttpRequest();
+request.setEndpoint('https://th-apex-http-callout.herokuapp.com/animals');
+request.setMethod('POST');
+request.setHeader('Content-Type', 'application/json;charset=UTF-8');
+// Set the body as a JSON object
+request.setBody('{"name":"mighty moose"}');
+HttpResponse response = http.send(request);
+// Parse the JSON response
+if (response.getStatusCode() != 201) {
+    System.debug('The status code returned was not expected: ' +
+        response.getStatusCode() + ' ' + response.getStatus());
+} else {
+    System.debug(response.getBody());
+}
+
+
+        Integer id = 2;
+        Http http = new Http();
+        HttpRequest request = new HttpRequest();
+
+            request.setEndpoint('https://th-apex-http-callout.herokuapp.com/animals/'+id);
+            request.setMethod('GET');
+
+        HttpResponse response = http.send(request);
+
+        if (response.getStatusCode() == 200) {
+            Map<String, Object> results = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
+            Map<String, Object> animal = (Map<String, Object>) results.get('animal');
+            String animalName = String.valueOf(animal.get('name'));
+            
+            System.debug(animal);
+            System.debug(animalName);
+            
+        }
